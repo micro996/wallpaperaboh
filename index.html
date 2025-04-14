@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Wallpaper Gallery</title>
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+
+    header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    #gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .gallery-item {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .gallery-item-info {
+      padding: 10px;
+      font-size: 14px;
+      margin-top: auto;
+    }
+
+    .gallery-item-info p {
+      margin-top: 0;
+      margin-bottom: 5px;
+    }
+
+    .gallery-item-info p:last-of-type {
+      margin-bottom: 0;
+    }
+
+    .gallery-item-info a {
+      color: #007bff;
+      text-decoration: none;
+    }
+
+    .download-btn {
+      margin: 10px;
+      padding: 8px 12px;
+      text-align: center;
+      background: #007bff;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: bold;
+      display: block;
+    }
+
+    .download-btn:hover {
+      background: #0056b3;
+    }
+
+    /* Modal styles */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.75);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+
+    .modal.hidden {
+      display: none;
+    }
+
+    .modal-content {
+      background: #fff;
+      padding: 1rem;
+      border-radius: 8px;
+      text-align: center;
+      max-width: 90%;
+      max-height: 90%;
+      position: relative;
+    }
+
+    .modal-content img {
+      max-width: 100%;
+      max-height: 70vh;
+      display: block;
+      margin: 0 auto 1rem;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 8px;
+      right: 12px;
+      font-size: 24px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Wallpaper Gallery</h1>
+    <div class="controls">
+      <select id="category-select">
+        <option value="All">All</option>
+        <option value="Nature">Nature</option>
+        <option value="Animals">Animals</option>
+        <option value="Technology">Technology</option>
+        <option value="Space">Space</option>
+        <option value="Cars">Cars</option>
+        <option value="Architecture">Architecture</option>
+      </select>
+      <input type="text" id="search-input" placeholder="Search wallpapers..." />
+      <button id="search-btn">Search</button>
+    </div>
+  </header>
+
+  <main>
+    <div id="gallery"></div>
+  </main>
+
+  <!-- Modal goes here, outside of header/main -->
+  <div id="image-modal" class="modal hidden">
+    <div class="modal-content">
+      <span class="close-btn">&times;</span>
+      <img id="modal-image" src="" alt="Preview" />
+      <a id="modal-download" class="download-btn" href="#" download>Download</a>
+    </div>
+  </div>
+  
+  <script src="script.js"></script>
+</body>
+</html>
