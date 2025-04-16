@@ -49,7 +49,7 @@ function createGalleryItem(wallpaper) {
   downloadBtn.textContent = "Download";
   downloadBtn.addEventListener("click", () => {
     const filename = `${wallpaper.title.replace(/\s+/g, "_")}.jpg`;
-    forceDownload(wallpaper.downloadUrl, filename);
+    downloadFromUnsplash(wallpaper.downloadLocation, filename);
   });
 
   item.appendChild(img);
@@ -87,32 +87,26 @@ async function fetchWallpapers(category, count = 100) {
     title: `${category} Wallpaper ${i + 1}`,
     category,
     resolution: `${img.width}x${img.height}`,
-    downloadUrl: img.links.download_location || img.links.download,
+    downloadLocation: img.links.download_location,
     photographer: img.user.name,
     photographerUrl: img.user.links.html,
   }));
 }
 
-async function forceDownload(url, filename) {
+async function downloadFromUnsplash(downloadLocation, filename) {
   try {
-    // If it's Unsplash's "download_location", get the real download URL
-    const res = await fetch(`${url}&client_id=${UNSPLASH_ACCESS_KEY}`);
+    const res = await fetch(downloadLocation + `?client_id=${UNSPLASH_ACCESS_KEY}`);
     const data = await res.json();
-    const imageUrl = data.url;
-
-    // Fetch the image blob
-    const imageRes = await fetch(imageUrl);
+    const imageRes = await fetch(data.url);
     const blob = await imageRes.blob();
-    const blobUrl = URL.createObjectURL(blob);
 
     const link = document.createElement("a");
-    link.href = blobUrl;
+    link.href = URL.createObjectURL(blob);
     link.download = filename;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-
-    URL.revokeObjectURL(blobUrl);
+    URL.revokeObjectURL(link.href);
   } catch (err) {
     console.error("Download failed:", err);
   }
@@ -123,9 +117,9 @@ function openModal(wallpaper) {
   modalImg.alt = wallpaper.title;
 
   const filename = `${wallpaper.title.replace(/\s+/g, "_")}.jpg`;
-  modalDownload.setAttribute("download", filename);
-  modalDownload.onclick = () => {
-    forceDownload(wallpaper.downloadUrl, filename);
+  //prevent duplicate downloads 
+    modalDownload.onclick = (e) =>{e.stopPropagation();
+  downloadFromUnsplash(wallpaper.downloadLocation, filename);
   };
 
   modal.classList.remove("hidden");
